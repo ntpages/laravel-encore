@@ -14,7 +14,7 @@ For the Laravel project you'll only need next setup:
 1. Install the node package\
    `yarn add @symfony/webpack-encore --dev`
 
-2. Create basic configuration file
+2. Create basic configuration file `webpack.config.js`
 
 ```javascript
 const Encore = require('@symfony/webpack-encore');
