@@ -1,0 +1,46 @@
+{
+	"name": "ntpages/laravel-encore",
+	"description": "Symfony's Webpack Encore for Laravel",
+	"keywords": [
+		"symfony",
+		"laravel",
+		"webpack encore",
+		"laravel mix"
+	],
+	"license": "MIT",
+	"type": "library",
+	"authors": [
+		{
+			"name": "Anton Stasyuk",
+			"email": "anton@ntpages.com.au",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": "^7.4",
+		"illuminate/support": "^7.0|^8.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Ntpages\\LaravelEncore\\": "./src"
+		},
+		"files": [
+			"src/helpers.php"
+		]
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Ntpages\\LaravelEncore\\EncoreServiceProvider"
+			],
+			"aliases": {
+				"Encore": "Ntpages\\LaravelEncore\\Encore"
+			}
+		}
+	}
+}
