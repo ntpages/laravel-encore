@@ -51,7 +51,7 @@ return [
    //...
    'providers' => [
       //...
-      Ntpages\LaravelEncore\EncoreServiceProvider::class,
+      \Ntpages\LaravelEncore\EncoreServiceProvider::class,
    ]
 ];
 ```
