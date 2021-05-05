@@ -43,7 +43,7 @@ module.exports = Encore.getWebpackConfig();
 2. Copy the config files\
    `php artisan vendor:publish`
 
-3. Add the provider in `config/app.php` providers section\
+3. Add the provider in `config/app.php` providers section
 
 ```php
 Ntpages\LaravelEncore\EncoreServiceProvider::class
