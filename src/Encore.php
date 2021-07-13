@@ -11,12 +11,15 @@ class Encore
     private array $returnedFiles = [];
     private array $entrypoints = [];
     private array $manifest = [];
+    private ?array $packages;
 
     public function __construct()
     {
         $config = \config('encore');
 
         if (is_array($config['packages'])) {
+            $this->packages = array_keys($config['packages']);
+
             foreach ($config['packages'] as $key => $path) {
                 [
                     'entrypoints' => $this->entrypoints[$key],
@@ -24,6 +27,8 @@ class Encore
                 ] = $this->readEncoreFiles("{$config['output_path']}/$path");
             }
         } else {
+            $this->packages = null;
+
             [
                 'entrypoints' => $this->entrypoints,
                 'manifest' => $this->manifest
@@ -33,7 +38,19 @@ class Encore
 
     public function asset(string $path): ?string
     {
-        return Arr::get($this->manifest, $path) ?? $path;
+
+        if (is_array($this->packages)) {
+            foreach ($this->packages as $key) {
+                if (strpos($path, $prefix = "$key.") === 0) {
+                    return $this->getAsset($this->manifest[$key], substr($path, strlen($prefix)));
+                }
+            }
+
+            throw new \LogicException(sprintf("Trying to load asset of unexisting package, available packages [%s]",
+                join(', ', $this->packages)));
+        } else {
+            return $this->getAsset($this->manifest, $path);
+        }
     }
 
     public function getLinkTags(string $entryName): ?Htmlable
@@ -46,6 +63,11 @@ class Encore
         $script = \sprintf('<script src="%%s"%s></script>', $defer ? ' defer' : '');
 
         return $this->getEntries($entryName, 'js', fn(string $p) => \sprintf($script, $p));
+    }
+
+    protected function getAsset(array $manifest, string $path)
+    {
+        return $manifest[$path] ?? '';
     }
 
     protected function getEntries(string $entryName, string $entryType, callable $format): ?Htmlable
@@ -67,7 +89,7 @@ class Encore
 
         // removing the prefix
         foreach ($this->readJsonFile("$path/manifest.json") as $key => $value) {
-            $manifest[substr($key, strlen("$path/"))] = $value;
+            $manifest[$key] = $value;
         }
 
         return [
